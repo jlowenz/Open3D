@@ -37,6 +37,7 @@ void PointCloud::Clear()
     points_.clear();
     normals_.clear();
     colors_.clear();
+    labels_.clear();
 }
 
 bool PointCloud::IsEmpty() const
@@ -107,6 +108,14 @@ PointCloud &PointCloud::operator+=(const PointCloud &cloud)
             colors_[old_vert_num + i] = cloud.colors_[i];
     } else {
         colors_.clear();
+    }
+    if ((!HasPoints() || HasLabels()) && cloud.HasLabels()) {
+        labels_.resize(new_vert_num);
+        for (size_t i = 0; i < add_vert_num; ++i) {
+            labels_[old_vert_num + i] = cloud.labels_[i];
+        }
+    } else {
+        labels_.clear();
     }
     points_.resize(new_vert_num);
     for (size_t i = 0; i < add_vert_num; i++)

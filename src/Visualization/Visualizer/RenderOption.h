@@ -48,6 +48,7 @@ public:
         XCoordinate = 2,
         YCoordinate = 3,
         ZCoordinate = 4,
+        Label = 8,
         Normal = 9,
     };
 
@@ -68,6 +69,7 @@ public:
         XCoordinate = 2,
         YCoordinate = 3,
         ZCoordinate = 4,
+        Label = 8,
         Normal = 9,
     };
 

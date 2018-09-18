@@ -25,58 +25,57 @@
 // ----------------------------------------------------------------------------
 
 #pragma once
-#include <memory>
 #include <Eigen/Core>
+#include <memory>
 
 namespace open3d {
 
-class ColorMap
-{
-public:
+class ColorMap {
+   public:
     enum class ColorMapOption {
         Gray = 0,
         Jet = 1,
         Summer = 2,
         Winter = 3,
         Hot = 4,
+        Label = 5,
     };
 
-public:
-    ColorMap() {};
-    virtual ~ColorMap() {};
+   public:
+    ColorMap(){};
+    virtual ~ColorMap(){};
 
-public:
+   public:
     /// Function to get a color from a value in [0..1]
     virtual Eigen::Vector3d GetColor(double value) const = 0;
 
-protected:
-    double Interpolate(double value,
-            double y0, double x0, double y1, double x1) const {
+   protected:
+    double Interpolate(double value, double y0, double x0, double y1,
+                       double x1) const {
         if (value < x0) return y0;
         if (value > x1) return y1;
         return (value - x0) * (y1 - y0) / (x1 - x0) + y0;
     }
     Eigen::Vector3d Interpolate(double value, const Eigen::Vector3d &y0,
-            double x0, const Eigen::Vector3d &y1, double x1) const {
+                                double x0, const Eigen::Vector3d &y1,
+                                double x1) const {
         if (value < x0) return y0;
         if (value > x1) return y1;
         return (value - x0) * (y1 - y0) / (x1 - x0) + y0;
     }
 };
 
-class ColorMapGray final : public ColorMap
-{
-public:
+class ColorMapGray final : public ColorMap {
+   public:
     Eigen::Vector3d GetColor(double value) const final;
 };
 
 /// See Matlab's Jet colormap
-class ColorMapJet final : public ColorMap
-{
-public:
+class ColorMapJet final : public ColorMap {
+   public:
     Eigen::Vector3d GetColor(double value) const final;
 
-protected:
+   protected:
     double JetBase(double value) const {
         if (value <= -0.75) {
             return 0.0;
@@ -93,27 +92,36 @@ protected:
 };
 
 /// See Matlab's Summer colormap
-class ColorMapSummer final : public ColorMap
-{
-public:
+class ColorMapSummer final : public ColorMap {
+   public:
     Eigen::Vector3d GetColor(double value) const final;
 };
 
 /// See Matlab's Winter colormap
-class ColorMapWinter final : public ColorMap
-{
-public:
+class ColorMapWinter final : public ColorMap {
+   public:
     Eigen::Vector3d GetColor(double value) const final;
 };
 
-class ColorMapHot final : public ColorMap
-{
-public:
+class ColorMapHot final : public ColorMap {
+   public:
     Eigen::Vector3d GetColor(double value) const final;
+};
+
+class ColorMapLabels final : public ColorMap {
+   public:
+    ColorMapLabels();
+    virtual ~ColorMapLabels() {}
+    Eigen::Vector3d GetColor(double value) const final;
+    Eigen::Vector3d GetColor(uint32_t label) const;
+
+   private:
+    Eigen::MatrixXd colors_;
 };
 
 /// Interface functions
 const std::shared_ptr<const ColorMap> GetGlobalColorMap();
 void SetGlobalColorMap(ColorMap::ColorMapOption option);
+const std::shared_ptr<const ColorMap> GetLabelColorMap();
 
-}    // namespace open3d
+}  // namespace open3d

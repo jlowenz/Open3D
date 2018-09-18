@@ -56,6 +56,30 @@ public:
     std::shared_ptr<const ColorMap> color_map_;
 };
 
+class LabelColorMapSingleton
+{
+private:
+    LabelColorMapSingleton() : color_map_(new ColorMapLabels) {
+        PrintDebug("Global colormap init.\n");
+    }
+    LabelColorMapSingleton(const LabelColorMapSingleton &) = delete;
+    GlobalColorMapSingleton &operator=(const GlobalColorMapSingleton &) = 
+            delete;
+public:
+    ~LabelColorMapSingleton() {
+        PrintDebug("Global colormap destruct.\n");
+    }
+
+public:
+    static LabelColorMapSingleton &GetInstance() {
+        static LabelColorMapSingleton singleton;
+        return singleton;
+    }
+
+public:
+    std::shared_ptr<const ColorMap> color_map_;
+};
+
 }    // unnamed namespace
 
 Eigen::Vector3d ColorMapGray::GetColor(double value) const
@@ -108,9 +132,98 @@ Eigen::Vector3d ColorMapHot::GetColor(double value) const
     }
 }
 
+template<typename T>
+inline double F(T a) { return ((double)a)/255.0; }
+
+ColorMapLabels::ColorMapLabels() : colors_(Eigen::MatrixXd::Zero(64,3))
+{
+    // fill in the colors
+    // Derived in part from: http://godsnotwheregodsnot.blogspot.com/2012/09/color-distribution-methodology.html
+    colors_ << 
+        0,1.0,0,
+        0,0,1,
+        1,0,0,
+        0,1,1,
+        1,F(166),1.,
+        1,F(219),F(102),
+        0,F(100),0,
+        0,0,F(103),
+        F(149),0,F(58),
+        0,F(125),F(181),
+        1.0,0.0,F(246),
+        1.0,F(238),F(232),
+        F(119),F(77),0,
+        F(144),F(251), F(146),
+        0,F(118),1.0,
+        F(213),1.0,0.0,
+        1.,F(147),F(126),
+        F(106),F(130),F(108),
+        1.,F(2.0),F(157),
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0,
+        0,0,0;
+}
+
+Eigen::Vector3d ColorMapLabels::GetColor(double v) const
+{
+    return GetColor(static_cast<uint32_t>(std::floor(v/64.)) % 64);
+}
+
+Eigen::Vector3d ColorMapLabels::GetColor(uint32_t v) const
+{
+    return colors_.row(v % 64);
+}
+
 const std::shared_ptr<const ColorMap> GetGlobalColorMap()
 {
     return GlobalColorMapSingleton::GetInstance().color_map_;
+}
+
+const std::shared_ptr<const ColorMap> GetLabelColorMap()
+{
+    return LabelColorMapSingleton::GetInstance().color_map_;
 }
 
 void SetGlobalColorMap(ColorMap::ColorMapOption option)
@@ -131,6 +244,10 @@ void SetGlobalColorMap(ColorMap::ColorMapOption option)
     case ColorMap::ColorMapOption::Hot:
         GlobalColorMapSingleton::GetInstance().color_map_.reset(
                 new ColorMapHot);
+        break;
+    case ColorMap::ColorMapOption::Label:
+        GlobalColorMapSingleton::GetInstance().color_map_.reset(
+                new ColorMapLabels);
         break;
     case ColorMap::ColorMapOption::Jet:
     default:
