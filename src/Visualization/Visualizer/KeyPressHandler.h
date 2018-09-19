@@ -26,24 +26,11 @@
 
 #pragma once
 
-#include <Visualization/Visualizer/KeyCallbackHandlerMixin.h>
-#include <map>
-#include <string>
+#include <Visualization/Visualizer/Visualizer.h>
 
 namespace open3d {
-
-class VisualizerWithKeyCallback : public KeyCallbackHandlerMixin<Visualizer> {
-   public:
-    VisualizerWithKeyCallback();
-    ~VisualizerWithKeyCallback() override;
-    VisualizerWithKeyCallback(const VisualizerWithKeyCallback &) = delete;
-    VisualizerWithKeyCallback &operator=(const VisualizerWithKeyCallback &) =
-        delete;
-
-    using KeyCallbackHandlerMixin<Visualizer>::RegisterKeyCallback;
-
-   public:
-    void PrintVisualizerHelp() override;
+struct KeyPressHandler {
+    virtual void KeyPressCallback(GLFWwindow *window, int key, int scancode,
+                                  int action, int mods) = 0;
 };
-
 }  // namespace open3d
