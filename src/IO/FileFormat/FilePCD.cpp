@@ -251,6 +251,7 @@ uint32_t UnpackBinaryPCDLabel(const char *data_ptr, const char type,
             data = *((uint32_t *)&f);
         }
     }
+    return data;
 }
 
 double UnpackBinaryPCDElement(const char *data_ptr, const char type,
@@ -734,7 +735,7 @@ bool WritePCDData(FILE *file, const PCDHeader &header,
             }
             if (has_labels) {
                 const auto &label = pointcloud.labels_[i];
-                data[idx] = *((float *)&label);
+                memcpy(&data[idx], &label, sizeof(label));
             }
             fwrite(data.get(), sizeof(float), header.elementnum, file);
         }
