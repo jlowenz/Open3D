@@ -49,6 +49,8 @@ void KeyCallbackHandlerMixin<V>::KeyPressCallback(GLFWwindow *window, int key,
                                                   int scancode, int action,
                                                   int mods) {
     if (action == GLFW_RELEASE) {
+        // TODO: this should be fixed to either only handle on RELEASE, or to make the callbacks responsible
+        V::KeyPressCallback(window, key, scancode, action, mods);
         return;
     }
     auto cbrec = key_to_callback_.find(key);
