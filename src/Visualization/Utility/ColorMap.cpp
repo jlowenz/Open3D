@@ -27,6 +27,7 @@
 #include "ColorMap.h"
 
 #include <Core/Utility/Console.h>
+#include <iostream>
 
 namespace open3d{
 
@@ -77,7 +78,7 @@ public:
     }
 
 public:
-    std::shared_ptr<const ColorMap> color_map_;
+    std::shared_ptr<const ColorMapLabels> color_map_;
 };
 
 }    // unnamed namespace
@@ -208,6 +209,7 @@ ColorMapLabels::ColorMapLabels() : colors_(Eigen::MatrixXd::Zero(64,3))
 
 Eigen::Vector3d ColorMapLabels::GetColor(double v) const
 {
+    assert(v >= 0.0 && v <= 1.0);
     return GetColor(static_cast<uint32_t>(std::floor(v * 64.)));
 }
 
@@ -221,7 +223,7 @@ const std::shared_ptr<const ColorMap> GetGlobalColorMap()
     return GlobalColorMapSingleton::GetInstance().color_map_;
 }
 
-const std::shared_ptr<const ColorMap> GetLabelColorMap()
+const std::shared_ptr<const ColorMapLabels> GetLabelColorMap()
 {
     return LabelColorMapSingleton::GetInstance().color_map_;
 }

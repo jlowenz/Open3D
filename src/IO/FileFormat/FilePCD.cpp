@@ -246,10 +246,10 @@ uint32_t UnpackBinaryPCDLabel(const char *data_ptr, const char type,
         } else if (type == 'U') {
             memcpy(&data, data_ptr, sizeof(data));
         } else if (type == 'F') {
-            float f;
-            memcpy(&f, data_ptr, sizeof(data));
-            data = *((uint32_t *)&f);
+            memcpy(&data, data_ptr, sizeof(data));
         }
+    } else {
+        std::cerr << "Size is NOT 4, how can this be?" << std::endl;
     }
     return data;
 }

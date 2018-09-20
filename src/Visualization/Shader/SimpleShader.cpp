@@ -140,7 +140,7 @@ bool SimpleShaderForPointCloud::PrepareBinding(
         PrintShaderWarning("Binding failed with empty pointcloud.");
         return false;
     }
-    const ColorMap &label_color_map = *GetLabelColorMap();
+    const ColorMapLabels &label_color_map = *GetLabelColorMap();
     const ColorMap &global_color_map = *GetGlobalColorMap();
     points.resize(pointcloud.points_.size());
     colors.resize(pointcloud.points_.size());

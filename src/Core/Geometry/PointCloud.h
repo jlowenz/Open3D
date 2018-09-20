@@ -32,6 +32,7 @@
 #include <memory>
 #include <tuple>
 #include <vector>
+#include <iostream>
 
 namespace open3d {
 

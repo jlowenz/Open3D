@@ -122,6 +122,6 @@ class ColorMapLabels final : public ColorMap {
 /// Interface functions
 const std::shared_ptr<const ColorMap> GetGlobalColorMap();
 void SetGlobalColorMap(ColorMap::ColorMapOption option);
-const std::shared_ptr<const ColorMap> GetLabelColorMap();
+const std::shared_ptr<const ColorMapLabels> GetLabelColorMap();
 
 }  // namespace open3d

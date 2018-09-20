@@ -213,7 +213,7 @@ bool PhongShaderForPointCloud::PrepareBinding(
         PrintShaderWarning("Binding failed with pointcloud with no normals.");
         return false;
     }
-    const ColorMap &label_color_map = *GetLabelColorMap();
+    const ColorMapLabels &label_color_map = *GetLabelColorMap();
     const ColorMap &global_color_map = *GetGlobalColorMap();
     points.resize(pointcloud.points_.size());
     normals.resize(pointcloud.points_.size());
