@@ -31,9 +31,9 @@
 #include <Core/Geometry/TriangleMesh.h>
 #include <Visualization/Shader/Shader.h>
 #include <Visualization/Utility/ColorMap.h>
+#include <iostream>
 
 namespace open3d {
-
 namespace glsl {
 
 bool SimpleShader::Compile() {

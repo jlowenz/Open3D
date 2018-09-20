@@ -235,6 +235,24 @@ bool ReadPCDHeader(FILE *file, PCDHeader &header) {
     return true;
 }
 
+uint32_t UnpackBinaryPCDLabel(const char *data_ptr, const char type,
+                              const int size) {
+    uint32_t data = 0;
+    if (size == 4) {
+        if (type == 'I') {
+            int32_t i;
+            memcpy(&i, data_ptr, sizeof(data));
+            data = static_cast<uint32_t>(i);
+        } else if (type == 'U') {
+            memcpy(&data, data_ptr, sizeof(data));
+        } else if (type == 'F') {
+            float f;
+            memcpy(&f, data_ptr, sizeof(data));
+            data = *((uint32_t *)&f);
+        }
+    }
+}
+
 double UnpackBinaryPCDElement(const char *data_ptr, const char type,
                               const int size) {
     if (type == 'I') {
@@ -335,6 +353,10 @@ uint32_t UnpackASCIIPCDLabel(const char *data_ptr, const char type,
         std::uint32_t data = 0;
         if (type == 'I') {
             data = std::stoi(data_ptr);
+        } else if (type == 'U') {
+            data = std::stoul(data_ptr);
+        } else if (type == 'F') {
+            data = static_cast<uint32_t>(std::stof(data_ptr));
         }
         return data;
     } else {
@@ -355,6 +377,9 @@ bool ReadPCDData(FILE *file, const PCDHeader &header, PointCloud &pointcloud) {
     }
     if (header.has_colors) {
         pointcloud.colors_.resize(header.points);
+    }
+    if (header.has_labels) {
+        pointcloud.labels_.resize(header.points);
     }
     if (header.datatype == PCD_DATA_ASCII) {
         char line_buffer[DEFAULT_IO_BUFFER_SIZE];
@@ -436,7 +461,7 @@ bool ReadPCDData(FILE *file, const PCDHeader &header, PointCloud &pointcloud) {
                     pointcloud.colors_[i] = UnpackBinaryPCDColor(
                         buffer.get() + field.offset, field.type, field.size);
                 } else if (field.name == "label") {
-                    pointcloud.labels_[i] = UnpackBinaryPCDElement(
+                    pointcloud.labels_[i] = UnpackBinaryPCDLabel(
                         buffer.get() + field.offset, field.type, field.size);
                 }
             }
@@ -520,7 +545,7 @@ bool ReadPCDData(FILE *file, const PCDHeader &header, PointCloud &pointcloud) {
                 }
             } else if (field.name == "label") {
                 for (int i = 0; i < header.points; i++) {
-                    pointcloud.labels_[i] = UnpackBinaryPCDElement(
+                    pointcloud.labels_[i] = UnpackBinaryPCDLabel(
                         base_ptr + i * field.size * field.count, field.type,
                         field.size);
                 }
@@ -783,11 +808,10 @@ bool ReadPointCloudFromPCD(const std::string &filename,
                    field.size, field.count, field.offset);
     }
     PrintDebug("Compression method is %d.\n", (int)header.datatype);
-    PrintDebug("Points: %s;  normals: %s;  colors: %s; labels: %s\n",
-               header.has_points ? "yes" : "no",
-               header.has_normals ? "yes" : "no",
-               header.has_colors ? "yes" : "no",
-               header.has_labels ? "yes" : "no");
+    PrintDebug(
+        "Points: %s;  normals: %s;  colors: %s; labels: %s\n",
+        header.has_points ? "yes" : "no", header.has_normals ? "yes" : "no",
+        header.has_colors ? "yes" : "no", header.has_labels ? "yes" : "no");
     if (ReadPCDData(file, header, pointcloud) == false) {
         PrintWarning("Read PCD failed: unable to read data.\n");
         fclose(file);

@@ -208,7 +208,7 @@ ColorMapLabels::ColorMapLabels() : colors_(Eigen::MatrixXd::Zero(64,3))
 
 Eigen::Vector3d ColorMapLabels::GetColor(double v) const
 {
-    return GetColor(static_cast<uint32_t>(std::floor(v/64.)) % 64);
+    return GetColor(static_cast<uint32_t>(std::floor(v * 64.)));
 }
 
 Eigen::Vector3d ColorMapLabels::GetColor(uint32_t v) const
