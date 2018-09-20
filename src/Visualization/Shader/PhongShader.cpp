@@ -238,8 +238,10 @@ bool PhongShaderForPointCloud::PrepareBinding(
                     view.GetBoundingBox().GetZPercentage(point(2)));
                 break;
             case RenderOption::PointColorOption::Label:
-                color = label_color_map.GetColor(pointcloud.labels_[i]);
-                break;
+                if (pointcloud.HasLabels()) {
+                    color = label_color_map.GetColor(pointcloud.labels_[i]);
+                    break;
+                }
             case RenderOption::PointColorOption::Color:
             case RenderOption::PointColorOption::Default:
             default:
