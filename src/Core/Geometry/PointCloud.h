@@ -92,6 +92,9 @@ class PointCloud : public Geometry3D {
     }
 
     void LabelPoints(const std::vector<size_t>& picked, uint32_t label) {
+        if (labels_.size() != points_.size()) {
+            ResetLabels();
+        }
         for (size_t i = 0; i < picked.size(); ++i) {
             if (picked[i] < labels_.size()) { 
                 labels_[picked[i]] = label;
