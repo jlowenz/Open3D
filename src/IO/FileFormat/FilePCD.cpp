@@ -617,6 +617,7 @@ bool GenerateHeader(const PointCloud &pointcloud, const bool write_ascii,
     }
     if (pointcloud.HasLabels()) {
         field.name = "label";
+        field.type = 'U';
         header.fields.push_back(field);
         header.elementnum++;
         header.pointsize += 4;
