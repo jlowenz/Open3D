@@ -180,8 +180,8 @@ void Visualizer::CaptureScreenImage(const std::string &filename/* = ""*/,
     std::string camera_filename;
     if (png_filename.empty()) {
         std::string timestamp = GetCurrentTimeStamp();
-        png_filename = "ScreenCapture_" + timestamp + ".png";
-        camera_filename = "ScreenCamera_" + timestamp + ".json";
+        png_filename = "/tmp/ScreenCapture_" + timestamp + ".png";
+        camera_filename = "/tmp/ScreenCamera_" + timestamp + ".json";
     }
     Image screen_image;
     screen_image.PrepareImage(view_control_ptr_->GetWindowWidth(),
@@ -291,8 +291,8 @@ void Visualizer::CaptureDepthImage(const std::string &filename/* = ""*/,
     std::string camera_filename;
     if (png_filename.empty()) {
         std::string timestamp = GetCurrentTimeStamp();
-        png_filename = "DepthCapture_" + timestamp + ".png";
-        camera_filename = "DepthCamera_" + timestamp + ".json";
+        png_filename = "/tmp/DepthCapture_" + timestamp + ".png";
+        camera_filename = "/tmp/DepthCamera_" + timestamp + ".json";
     }
     Image depth_image;
     depth_image.PrepareImage(view_control_ptr_->GetWindowWidth(),
@@ -375,8 +375,8 @@ void Visualizer::CaptureDepthPointCloud(const std::string &filename/* = ""*/,
     std::string camera_filename;
     if (ply_filename.empty()) {
         std::string timestamp = GetCurrentTimeStamp();
-        ply_filename = "DepthCapture_" + timestamp + ".ply";
-        camera_filename = "DepthCamera_" + timestamp + ".json";
+        ply_filename = "/tmp/DepthCapture_" + timestamp + ".ply";
+        camera_filename = "/tmp/DepthCamera_" + timestamp + ".json";
     }
     Image depth_image;
     depth_image.PrepareImage(view_control_ptr_->GetWindowWidth(),
@@ -459,7 +459,7 @@ void Visualizer::CaptureRenderOption(const std::string &filename/* = ""*/)
     std::string json_filename = filename;
     if (json_filename.empty()) {
         std::string timestamp = GetCurrentTimeStamp();
-        json_filename = "RenderOption_" + timestamp + ".json";
+        json_filename = "/tmp/RenderOption_" + timestamp + ".json";
     }
     PrintDebug("[Visualizer] Render option capture to %s\n",
             json_filename.c_str());
