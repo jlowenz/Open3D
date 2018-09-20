@@ -62,6 +62,7 @@ public:
     Eigen::Vector2d GetMinBound() const final;
     Eigen::Vector2d GetMaxBound() const final;
     void FillPolygon(int width, int height);
+    std::vector<size_t> GetSelectedPoints(const PointCloud& input, const ViewControl& view);
     std::shared_ptr<PointCloud> CropPointCloud(
             const PointCloud &input, const ViewControl &view);
     std::shared_ptr<TriangleMesh> CropTriangleMesh(

@@ -111,6 +111,23 @@ void SelectionPolygon::FillPolygon(int width, int height)
     }
 }
 
+std::vector<size_t> SelectionPolygon::GetSelectedPoints(const PointCloud& input, const ViewControl& view)
+{
+    std::vector<size_t> empty;
+    if (IsEmpty()) {
+        return empty;
+    }
+    switch (polygon_type_) {
+    case SectionPolygonType::Rectangle:
+        return CropInRectangle(input.points_, view);
+    case SectionPolygonType::Polygon:
+        return CropInPolygon(input.points_, view);
+    case SectionPolygonType::Unfilled:
+    default:
+        return empty;
+    }    
+}
+
 std::shared_ptr<PointCloud> SelectionPolygon::CropPointCloud(
         const PointCloud &input, const ViewControl &view)
 {
